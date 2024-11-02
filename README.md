@@ -31,3 +31,16 @@ The **Database Normalization Tool** is a Python-based application designed to no
 ├── FD2.txt              # Lists functional dependencies for other tables
 └── requirements.txt     # Lists required Python packages
 
+## How to Run
+- **Set up python**: https://docs.python.org/3/using/index.html
+- **Clone the Project**: https://github.com/Susmitha-J/Database-Normalizer.git
+- **Clone the Project**:  ```plaintext Python Main.py
+- **Enter the relation filename**: give the excel file (.xlsx) relation as input
+- **Enter the relation Functional Dependency**: Give the Functional Dependency as input with relationname 
+- **Enter the Primary Keys**: Enter the Primary keys
+- **Enter the Primary Keys**: Choose highest normal form and enter
+- **Validate Functional Dependencies**: Validate the assumed Functional dependencies or give the New FDs
+
+
+
+
