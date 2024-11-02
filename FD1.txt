@@ -1,0 +1,28 @@
+PromocodeUsed:
+OrderID -->> DrinkID, FoodID, PromocodeUsed
+OrderID -->> FoodID, DrinkID
+
+DrinkIngredient:
+OrderID, DrinkID -->> FoodID, DrinkIngredient
+OrderID -->> FoodID, DrinkID
+
+DrinkAllergen:
+OrderID, DrinkID -->> FoodID, DrinkAllergen
+OrderID -->> FoodID, DrinkID
+
+FoodIngredient:
+OrderID, FoodID -->> DrinkID, FoodIngredient
+OrderID -->> FoodID, DrinkID
+
+FoodAllergen:
+OrderID, FoodID -->> DrinkID, FoodAllergen
+OrderID -->> FoodID, DrinkID
+
+BaseRelation:
+OrderID -->> FoodID, DrinkID
+OrderID -> Date, TotalCost, TotalDrinkCost, TotalFoodCost, CustomerID, CustomerName
+OrderID, DrinkID -> DrinkSize, DrinkQuantity, Milk
+OrderID, FoodID -> FoodQuantity
+CustomerID -> CustomerName
+DrinkID -> DrinkName
+FoodID -> FoodName

@@ -1,0 +1,9 @@
+BaseRelation:
+StudentID -> FirstName, LastName
+Course, Professor -> classroom
+Course -> CourseStart, CourseEnd
+Professor -> ProfessorEmail
+Course ->> Professor
+Course ->> classRoom
+StudentID ->> Course
+StudentID ->> Professor
