@@ -153,37 +153,37 @@ def main():
     print()
     print("---------------------------------------------------------------------------------------------------------------------")
     #Decompose to 4NF
-    check4nfForNewData = input("Do you want to Do 4NF on the existing tables (Yes/No) : ")
-    if(check4nfForNewData == "No"):
-        file_path = input("Enter the filename for the relation for 4NF (e.g., 'relationinput.xlsx'): ")
-        df = pd.read_excel(file_path)
-        fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
-        # Extract headers and data
-        headers = list(df.columns)
-        data = df.values.tolist()
-        # Get primary key input from the user
-        primary_key = input("Enter the primary keys, separated by commas: ").split(',')
-        primary_key = [key.strip() for key in primary_key]
+    check4nfForOldData = input("Do you want to Do 4NF on the existing tables (Yes/No) : ")
+    if(check4nfForOldData == "No"):
+                file_path = input("Enter the filename for the relation for 4NF (e.g., 'relationinput.xlsx'): ")
+                df = pd.read_excel(file_path)
+                fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
+                # Extract headers and data
+                headers = list(df.columns)
+                data = df.values.tolist()
+                # Get primary key input from the user
+                primary_key = input("Enter the primary keys, separated by commas: ").split(',')
+                primary_key = [key.strip() for key in primary_key]
 
-        # Create Relation instance
-        relation = Relation(headers, data, primary_key)
-        relation.add_name("InputRelation")
+                # Create Relation instance
+                relation = Relation(headers, data, primary_key)
+                relation.add_name("InputRelation")
 
-        dependencies = read_dependencies_from_file(fd_filename)
-        relations = validate_and_add_dependencies(ensure_dict_format(relation), dependencies)
-        print("--------------------------------------------------------------------------------------------------------------------")
-        print("\nInput Relation:")
-        relation.display()
-        print("--------------------------------------------------------------------------------------------------------------------")
-        
-        # Decompose to 4NF
-        print("4NF")
-        relations_4nf = decompose_to_4nf(ensure_dict_format(relation))
-        print("AFTER 4NF NORMALIZATION")
-        for rel in relations_4nf.values():
-                rel.display()
-                print(rel.build_schema())
-        print("-----------------------------------------------------------------------------------------------------------------")
+                dependencies = read_dependencies_from_file(fd_filename)
+                relations = validate_and_add_dependencies(ensure_dict_format(relation), dependencies)
+                print("--------------------------------------------------------------------------------------------------------------------")
+                print("\nInput Relation:")
+                relation.display()
+                print("--------------------------------------------------------------------------------------------------------------------")
+                
+                # Decompose to 4NF
+                print("4NF")
+                relations_4nf = decompose_to_4nf(ensure_dict_format(relation))
+                print("AFTER 4NF NORMALIZATION")
+                for rel in relations_4nf.values():
+                        rel.display()
+                        print(rel.build_schema())
+                print("-----------------------------------------------------------------------------------------------------------------")
     else:
         if check_all_relations_4nf(ensure_dict_format(relations_bcnf)):
             print("RELATIONS ARE ALREADY IN 4NF")
@@ -237,7 +237,7 @@ main()
 
 
 #5NF Decomposition for new input
-file_path = 'relation.xlsx'
+file_path = 'relation5nf.xlsx'
 df = pd.read_excel(file_path)
 # Extract headers and data
 headers = list(df.columns)
