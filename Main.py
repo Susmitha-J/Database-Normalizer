@@ -33,8 +33,6 @@ def main():
     file_path = input("Enter the filename for the relation (e.g., 'relationinput.xlsx'): ")
     df = pd.read_excel(file_path)
 
-    fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
-
     # Extract headers and data
     headers = list(df.columns)
     data = df.values.tolist()
@@ -50,7 +48,8 @@ def main():
     print("\nInput Relation:")
     relation.display()
     print("--------------------------------------------------------------------------------------------------------------------")
-
+    print()
+    print()
     # Ask the user to select the highest form of normalization
     print("Select the highest level of normalization you want to achieve:")
     print("1. 1NF")
@@ -61,14 +60,22 @@ def main():
     print("6. 5NF")
     choice = int(input("Enter your choice (1-6): "))
 
+    print()
+    print()
+    print("---------------------------------------------------------------------------------------------------------------------")
     # Check 1NF and normalize if needed
     is_in_1nf, non_1nf_attributes = is_1nf(relation)
     if is_in_1nf:
         print("RELATION IS ALREADY IN 1NF")
+        print()
+        fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
         dependencies = read_dependencies_from_file(fd_filename)
         relations = validate_and_add_dependencies(ensure_dict_format(relation), dependencies)
+        print()
+        print()
     else:
         normalized_relations_dict = normalize_1nf_relation(relation, non_1nf_attributes)
+        fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
         dependencies = read_dependencies_from_file(fd_filename)
         relations = validate_and_add_dependencies(normalized_relations_dict, dependencies)
         print("AFTER 1NF NORMALIZATION")
@@ -76,15 +83,19 @@ def main():
             rel.display()
             print(rel.build_schema())
         print("-----------------------------------------------------------------------------------------------------------------")
-
+        print()
+        print()
     if choice == 1:
         return
 
+    print()
+    print("---------------------------------------------------------------------------------------------------------------------")
     # Decompose to 2NF
     print("2NF")
     if check_all_relations_2nf(ensure_dict_format(relations)):
         print("RELATIONS ARE ALREADY IN 2NF")
         relations_2nf = relations
+        print("--------------------------------------------------------------------------------------------------------------------------")
     else:
         relations_2nf = decompose_to_2nf(ensure_dict_format(relations))
         print("AFTER 2NF NORMALIZATION")
@@ -92,15 +103,19 @@ def main():
             rel.display()
             print(rel.build_schema())
         print("-----------------------------------------------------------------------------------------------------------------")
-
+        print()
+        print()
     if choice == 2:
         return
 
+    print()
+    print("---------------------------------------------------------------------------------------------------------------------")
     # Decompose to 3NF
     print("3NF")
     if check_all_relations_3nf(ensure_dict_format(relations_2nf)):
         print("RELATIONS ARE ALREADY IN 3NF")
         relations_3nf = relations_2nf
+        print("-----------------------------------------------------------------------------------------------------------------")
     else:
         relations_3nf = decompose_to_3nf(ensure_dict_format(relations_2nf))
         print("AFTER 3NF NORMALIZATION")
@@ -108,15 +123,19 @@ def main():
             rel.display()
             print(rel.build_schema())
         print("-----------------------------------------------------------------------------------------------------------------")
-
+        print()
+        print()
     if choice == 3:
         return
 
+    print()
+    print("---------------------------------------------------------------------------------------------------------------------")
     # Decompose to BCNF
     print("BCNF")
     if check_all_relations_bcnf(ensure_dict_format(relations_3nf)):
         print("RELATIONS ARE ALREADY IN BCNF")
         relations_bcnf = relations_3nf
+        print("-----------------------------------------------------------------------------------------------------------------")
     else:
         relations_bcnf = decompose_to_bcnf(ensure_dict_format(relations_3nf))
         print("AFTER BCNF NORMALIZATION")
@@ -124,36 +143,81 @@ def main():
             rel.display()
             print(rel.build_schema())
         print("-----------------------------------------------------------------------------------------------------------------")
+        print()
+        print()
+
 
     if choice == 4:
         return
+    
+    print()
+    print("---------------------------------------------------------------------------------------------------------------------")
+    #Decompose to 4NF
+    check4nfForNewData = input("Do you want to Do 4NF on the existing tables (Yes/No) : ")
+    if(check4nfForNewData == "No"):
+        file_path = input("Enter the filename for the relation for 4NF (e.g., 'relationinput.xlsx'): ")
+        df = pd.read_excel(file_path)
+        fd_filename = input("Enter the filename for functional dependencies (e.g., 'FD.txt'): ")
+        # Extract headers and data
+        headers = list(df.columns)
+        data = df.values.tolist()
+        # Get primary key input from the user
+        primary_key = input("Enter the primary keys, separated by commas: ").split(',')
+        primary_key = [key.strip() for key in primary_key]
 
-    # Decompose to 4NF
-    print("4NF")
-    if check_all_relations_4nf(ensure_dict_format(relations_bcnf)):
-        print("RELATIONS ARE ALREADY IN 4NF")
-        relations_4nf = relations_bcnf
-    else:
-        relations_4nf = decompose_to_4nf(ensure_dict_format(relations_bcnf))
+        # Create Relation instance
+        relation = Relation(headers, data, primary_key)
+        relation.add_name("InputRelation")
+
+        dependencies = read_dependencies_from_file(fd_filename)
+        relations = validate_and_add_dependencies(ensure_dict_format(relation), dependencies)
+        print("--------------------------------------------------------------------------------------------------------------------")
+        print("\nInput Relation:")
+        relation.display()
+        print("--------------------------------------------------------------------------------------------------------------------")
+        
+        # Decompose to 4NF
+        print("4NF")
+        relations_4nf = decompose_to_4nf(ensure_dict_format(relation))
         print("AFTER 4NF NORMALIZATION")
         for rel in relations_4nf.values():
-            rel.display()
-            print(rel.build_schema())
+                rel.display()
+                print(rel.build_schema())
         print("-----------------------------------------------------------------------------------------------------------------")
-
-    if choice == 5:
-        return
-
-    # Decompose to 5NF
-    print("5NF")
-    if check_all_relations_5nf(ensure_dict_format(relations_4nf)):
-        print("RELATIONS ARE ALREADY IN 5NF")
     else:
-        relations_5nf = decompose_to_5nf(list(ensure_dict_format(relations_4nf).values()))
-        print("AFTER 5NF NORMALIZATION")
-        for rel in relations_5nf:
-            rel.display()
-            print(rel.build_schema())
+        if check_all_relations_4nf(ensure_dict_format(relations_bcnf)):
+            print("RELATIONS ARE ALREADY IN 4NF")
+            relations_4nf = relations_bcnf
+        else:
+            relations_4nf = decompose_to_4nf(ensure_dict_format(relations_bcnf))
+            print("AFTER 4NF NORMALIZATION")
+            for rel in relations_4nf.values():
+                rel.display()
+                print(rel.build_schema())
+            print("-----------------------------------------------------------------------------------------------------------------")
+
+        if choice == 5:
+            return
+
+        print()
+        print()
+        print("---------------------------------------------------------------------------------------------------------------------")
+        # Decompose to 5NF
+        print("5NF")
+        if check_all_relations_5nf(ensure_dict_format(relations_4nf)):
+            print("RELATIONS ARE ALREADY IN 5NF")
+            print()
+        else:
+            relations_5nf = decompose_to_5nf(list(ensure_dict_format(relations_4nf).values()))
+            print("AFTER 5NF NORMALIZATION")
+            for rel in relations_5nf:
+                rel.display()
+                print(rel.build_schema())
+                print()
+        print("-----------------------------------------------------------------------------------------------------------------------")
+        print()
+        print()
+
 
 import subprocess
 import sys
@@ -185,12 +249,11 @@ relation.add_name("attendance")
 print("Input Relation :")
 print(relation.display())
 
-
 # Decompose into 5NF relations if applicable
 r1, r2 = decompose_to_5nf_relation_ip(relation)
 
 if r1 and r2:
-        print("Decomposition Successful! Relations in 5NF:")
+        print("Decomposition Successful!")
         r1.display()
         r2.display()
 else:

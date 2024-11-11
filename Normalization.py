@@ -2,6 +2,7 @@
 import pandas as pd
 from Relation import Relation
 from Dependency import Dependency
+from itertools import combinations
 
 # Normalization checks and decomposition functions
 
@@ -21,8 +22,8 @@ def is_1nf(relation):
     # Check each row to see if any column has multivalued entries
     for row in relation.data:
         for index, value in enumerate(row):
-            # Consider a multivalued attribute if there are commas in the value
-            if isinstance(value, str) and ',' in value:
+            # Consider a multivalued attribute if there are commas and set of values in the value
+            if isinstance(value, str) and ('{' in value and '}' in value) and ',' in value:
                 non_1nf_columns.add(relation.headers[index])
 
     # If there are any columns identified, it is not in 1NF
